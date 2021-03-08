@@ -18,8 +18,14 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex flex-column align-items-center text-center">
+                            @if (Model.ProfilePicture == null)
+                            {
                             <img id="pic" src="https://bootdey.com/img/Content/avatar/avatar7.png" class="rounded-circle" width="150">
-                            @*<img id="myImg" src="@picturePath" class="rounded-circle" width="150">*@
+                            }
+                            else
+                            {
+                            <img id="pic" src="@picturePath" asp-append-version="true" class="rounded-circle" width="150">
+                            }
                             <div id="myModal" class="modal">
                                 <span class="close">&times;</span>
                                 <img class="modal-content" id="pic1">
@@ -116,7 +122,7 @@
                         @foreach (var x in Model.reviews)
                         {
                             <div id="commentWrapp">
-                                <img id="giverImg" src="@x.GiverPicture" />
+                                <img id="giverImg" src="@x.GiverPicture" asp-append-version="true" />
                                 <div id="details">
                                     @if (UserManager.GetUserName(User) == x.GiverUserName)
                                     {
@@ -322,7 +328,7 @@
         
     }
 
-
+    //img
     var modal = document.getElementById("myModal");
     var img = document.getElementById("pic");
     var modalImg = document.getElementById("pic1");
@@ -330,11 +336,10 @@
         modal.style.display = "block";
         modalImg.src = this.src;
     }
-
+    //img
     var span = document.getElementsByClassName("close")[0];
     span.onclick = function () {
         modal.style.display = "none";
-
     }
 
     //Comments
@@ -385,10 +390,6 @@
             img.setAttribute("src", data);
             window.location.reload();
         });
-
-
-
-
     }
 
 </script>

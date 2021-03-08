@@ -10,8 +10,8 @@ using sppo.Data;
 namespace sppo.Migrations
 {
     [DbContext(typeof(MyContext))]
-    [Migration("20201128130417_nova")]
-    partial class nova
+    [Migration("20210308165651_proba")]
+    partial class proba
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -180,9 +180,6 @@ namespace sppo.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CompanyId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -195,19 +192,17 @@ namespace sppo.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ProfileId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
 
                     b.HasIndex("JobId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("ProfileId");
 
                     b.ToTable("advertisements");
                 });
@@ -389,14 +384,14 @@ namespace sppo.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AdvertisementId")
+                    b.Property<int?>("AdvertisementId")
                         .HasColumnType("int");
 
                     b.Property<int?>("CompanyId")
                         .HasColumnType("int");
 
-                    b.Property<byte[]>("Cv")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("Cv")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool?>("DrivingLicence")
                         .HasColumnType("bit");
@@ -606,31 +601,37 @@ namespace sppo.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AccountId1")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("FormId")
-                        .HasColumnType("int");
+                    b.Property<string>("FromUserId")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ReviewId")
-                        .HasColumnType("int");
+                    b.Property<string>("FromUserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NotiBody")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NotiHeader")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ToUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ToUserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccountId1");
-
-                    b.HasIndex("FormId");
-
-                    b.HasIndex("ReviewId");
 
                     b.ToTable("notifications");
                 });
@@ -645,20 +646,20 @@ namespace sppo.Migrations
                     b.Property<string>("Commentary")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CompanyId")
-                        .HasColumnType("int");
+                    b.Property<string>("GiverId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("PostDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("ReciverId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex("GiverId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("ReciverId");
 
                     b.ToTable("reviews");
                 });
@@ -978,17 +979,13 @@ namespace sppo.Migrations
 
             modelBuilder.Entity("SPPO.EntityModels.Advertisement", b =>
                 {
-                    b.HasOne("SPPO.EntityModels.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId");
-
                     b.HasOne("SPPO.EntityModels.Job", "Job")
                         .WithMany()
                         .HasForeignKey("JobId");
 
-                    b.HasOne("SPPO.EntityModels.User", "User")
+                    b.HasOne("sppo.Areas.Identity.Data.Profile", "Profile")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("ProfileId");
                 });
 
             modelBuilder.Entity("SPPO.EntityModels.City", b =>
@@ -1026,9 +1023,7 @@ namespace sppo.Migrations
                 {
                     b.HasOne("SPPO.EntityModels.Advertisement", "Advertisement")
                         .WithMany()
-                        .HasForeignKey("AdvertisementId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AdvertisementId");
 
                     b.HasOne("SPPO.EntityModels.Company", "Company")
                         .WithMany()
@@ -1094,30 +1089,15 @@ namespace sppo.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SPPO.EntityModels.Notification", b =>
-                {
-                    b.HasOne("sppo.Areas.Identity.Data.Profile", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId1");
-
-                    b.HasOne("SPPO.EntityModels.Form", "Form")
-                        .WithMany()
-                        .HasForeignKey("FormId");
-
-                    b.HasOne("SPPO.EntityModels.Review", "Review")
-                        .WithMany()
-                        .HasForeignKey("ReviewId");
-                });
-
             modelBuilder.Entity("SPPO.EntityModels.Review", b =>
                 {
-                    b.HasOne("SPPO.EntityModels.Company", "Company")
+                    b.HasOne("sppo.Areas.Identity.Data.Profile", "Giver")
                         .WithMany()
-                        .HasForeignKey("CompanyId");
+                        .HasForeignKey("GiverId");
 
-                    b.HasOne("SPPO.EntityModels.User", "User")
+                    b.HasOne("sppo.Areas.Identity.Data.Profile", "Reciver")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("ReciverId");
                 });
 
             modelBuilder.Entity("SPPO.EntityModels.Statistic", b =>

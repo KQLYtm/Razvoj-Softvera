@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using sppo.Areas.Identity.Data;
+using sppo.Common;
 using sppo.Data;
 using sppo.Service;
 
@@ -31,6 +32,9 @@ namespace sppo
             services.AddRazorPages();
             services.AddTransient<IEmailSender, EmailSender>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
+            services.AddScoped<INotiService, NotiService>();
+
+            Global.ConnectionStrings = Configuration.GetConnectionString("MyContextConnection");
 
             services.Configure<IdentityOptions>(options =>
             {

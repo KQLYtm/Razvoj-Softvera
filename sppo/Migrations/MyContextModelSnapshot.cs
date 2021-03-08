@@ -599,31 +599,37 @@ namespace sppo.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AccountId1")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("FormId")
-                        .HasColumnType("int");
+                    b.Property<string>("FromUserId")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ReviewId")
-                        .HasColumnType("int");
+                    b.Property<string>("FromUserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NotiBody")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NotiHeader")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ToUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ToUserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AccountId1");
-
-                    b.HasIndex("FormId");
-
-                    b.HasIndex("ReviewId");
 
                     b.ToTable("notifications");
                 });
@@ -1079,21 +1085,6 @@ namespace sppo.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("SPPO.EntityModels.Notification", b =>
-                {
-                    b.HasOne("sppo.Areas.Identity.Data.Profile", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId1");
-
-                    b.HasOne("SPPO.EntityModels.Form", "Form")
-                        .WithMany()
-                        .HasForeignKey("FormId");
-
-                    b.HasOne("SPPO.EntityModels.Review", "Review")
-                        .WithMany()
-                        .HasForeignKey("ReviewId");
                 });
 
             modelBuilder.Entity("SPPO.EntityModels.Review", b =>

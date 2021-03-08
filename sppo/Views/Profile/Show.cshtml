@@ -25,8 +25,17 @@
                     <td>@s.Email</td>
                     <td>@s.CreateDate</td>
                     <td>@s.AvgGrade</td>
-                    <td><img src=@picturePath asp-append-version="true" class="rounded-circle" height="40" width="40" alt="Picture not loaded." />
-                </tr>
+                    <td>
+                        @if(@s.ProfilePicture!=null)
+                        {
+                        <img src=@picturePath asp-append-version="true" class="rounded-circle" height="40" width="40" alt="Picture not loaded." />
+                        }
+                        else
+                        {
+                        <img id="pic" src="https://bootdey.com/img/Content/avatar/avatar7.png" class="rounded-circle" width="150">
+                        }
+                    </td>
+              </tr>
             }
         </tbody>
     </table>
